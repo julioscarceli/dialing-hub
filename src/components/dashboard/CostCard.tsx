@@ -8,13 +8,42 @@ interface CostCardProps {
   trend?: "up" | "down" | "neutral";
   trendValue?: string;
   highlight?: boolean;
+  colorVariant?: "primary" | "alert" | "secondary";
+  subtitle?: string;
 }
 
-export const CostCard = ({ title, value, icon: Icon, trend = "neutral", trendValue, highlight = false }: CostCardProps) => {
+export const CostCard = ({ 
+  title, 
+  value, 
+  icon: Icon, 
+  trend = "neutral", 
+  trendValue, 
+  highlight = false,
+  colorVariant = "primary",
+  subtitle
+}: CostCardProps) => {
   const trendColors = {
     up: "text-destructive",
     down: "text-success",
     neutral: "text-muted-foreground",
+  };
+
+  const variantColors = {
+    primary: "text-primary",
+    alert: "text-secondary",
+    secondary: "text-muted-foreground",
+  };
+
+  const iconBgColors = {
+    primary: "bg-primary/10",
+    alert: "bg-secondary/10",
+    secondary: "bg-muted/30",
+  };
+
+  const iconTextColors = {
+    primary: "text-primary",
+    alert: "text-secondary",
+    secondary: "text-muted-foreground",
   };
 
   return (
@@ -23,8 +52,8 @@ export const CostCard = ({ title, value, icon: Icon, trend = "neutral", trendVal
       highlight && "border-primary/50 glow-primary"
     )}>
       <div className="flex items-center gap-3 mb-3">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Icon className="w-4 h-4 text-primary" />
+        <div className={cn("p-2 rounded-lg", iconBgColors[colorVariant])}>
+          <Icon className={cn("w-4 h-4", iconTextColors[colorVariant])} />
         </div>
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           {title}
@@ -33,10 +62,14 @@ export const CostCard = ({ title, value, icon: Icon, trend = "neutral", trendVal
       
       <p className={cn(
         "font-mono text-2xl font-bold tracking-tight",
-        highlight ? "text-primary" : "text-foreground"
+        variantColors[colorVariant]
       )}>
         {value}
       </p>
+
+      {subtitle && (
+        <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+      )}
       
       {trendValue && (
         <div className="flex items-center gap-1 mt-2">

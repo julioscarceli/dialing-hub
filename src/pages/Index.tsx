@@ -1,14 +1,13 @@
 import { 
-  Phone, 
-  PhoneOff, 
-  Users, 
-  Clock, 
-  TrendingUp, 
   DollarSign,
   Activity,
-  BarChart3,
-  Zap,
-  Database
+  Clock,
+  Database,
+  Trash2,
+  Upload,
+  Target,
+  Percent,
+  Radio
 } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { UploadZone } from "@/components/dashboard/UploadZone";
@@ -38,80 +37,86 @@ const Index = () => {
               </div>
             </section>
 
+            {/* Botões de Ação */}
+            <section className="card-base p-4">
+              <div className="flex flex-wrap gap-3">
+                <Button variant="outline" className="flex-1 min-w-[100px] bg-muted/50 hover:bg-muted">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Limpar Uploads
+                </Button>
+                <Button className="flex-1 min-w-[100px] bg-success hover:bg-success/90 text-success-foreground">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Importar MG
+                </Button>
+                <Button className="flex-1 min-w-[100px] bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Importar SP
+                </Button>
+              </div>
+            </section>
+
             {/* Painel Status Atual */}
             <section>
               <h2 className="section-title flex items-center gap-2">
                 <Activity className="w-4 h-4" />
                 Status Atual
               </h2>
-              <div id="realtime-status" className="grid grid-cols-2 gap-4">
-                <StatusCard 
-                  title="Linhas Ativas MG"
-                  value="24"
-                  icon={Phone}
-                  status="online"
-                  subtitle="de 30 disponíveis"
-                />
-                <StatusCard 
-                  title="Linhas Ativas SP"
-                  value="18"
-                  icon={Phone}
-                  status="online"
-                  subtitle="de 25 disponíveis"
-                />
-                <StatusCard 
-                  title="Em Espera"
-                  value="156"
-                  icon={Clock}
-                  status="warning"
-                  subtitle="aguardando"
-                />
-                <StatusCard 
-                  title="Desconectadas"
-                  value="3"
-                  icon={PhoneOff}
-                  status="offline"
-                  subtitle="requer atenção"
-                />
-                <StatusCard 
-                  title="Taxa de Atendimento"
-                  value="67%"
-                  icon={TrendingUp}
-                  status="online"
-                />
-                <StatusCard 
-                  title="Operadores Online"
-                  value="12"
-                  icon={Users}
-                  status="online"
-                />
-                <StatusCard 
-                  title="Chamadas/Hora"
-                  value="342"
-                  icon={Zap}
-                  status="neutral"
-                />
-                <StatusCard 
-                  title="Tempo Médio"
-                  value="2:45"
-                  icon={Clock}
-                  status="neutral"
-                  subtitle="min/chamada"
-                />
-              </div>
-            </section>
-
-            {/* Ações Rápidas */}
-            <section className="card-base p-4">
-              <div className="flex flex-wrap gap-3">
-                <Button className="flex-1 min-w-[120px]">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Iniciar Discagem
-                </Button>
-                <Button variant="outline" className="flex-1 min-w-[120px]">
-                  <PhoneOff className="w-4 h-4 mr-2" />
-                  Pausar Sistema
-                </Button>
+              <div id="realtime-status" className="space-y-4">
+                {/* Status MG */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-success border-l-2 border-success pl-2">
+                    Minas Gerais (MG)
+                  </h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    <StatusCard 
+                      title="Mailing Ativo"
+                      value="Campanha A"
+                      icon={Target}
+                      status="online"
+                    />
+                    <StatusCard 
+                      title="Progresso"
+                      value="67%"
+                      icon={Percent}
+                      status="online"
+                    />
+                    <StatusCard 
+                      title="Canais"
+                      value="24"
+                      icon={Radio}
+                      status="online"
+                      subtitle="saídas"
+                    />
+                  </div>
+                </div>
+                
+                {/* Status SP */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-destructive border-l-2 border-destructive pl-2">
+                    São Paulo (SP)
+                  </h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    <StatusCard 
+                      title="Mailing Ativo"
+                      value="Campanha B"
+                      icon={Target}
+                      status="offline"
+                    />
+                    <StatusCard 
+                      title="Progresso"
+                      value="42%"
+                      icon={Percent}
+                      status="offline"
+                    />
+                    <StatusCard 
+                      title="Canais"
+                      value="18"
+                      icon={Radio}
+                      status="offline"
+                      subtitle="saídas"
+                    />
+                  </div>
+                </div>
               </div>
             </section>
           </div>
@@ -122,7 +127,7 @@ const Index = () => {
             <section>
               <h2 className="section-title flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
-                Custo Discador
+                Custo Discador - Financeiro
               </h2>
               <div id="custo-discador-output" className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <CostCard 
@@ -130,49 +135,27 @@ const Index = () => {
                   value="R$ 4.280"
                   icon={DollarSign}
                   highlight
+                  colorVariant="primary"
                 />
                 <CostCard 
-                  title="Gasto Hoje"
+                  title="Custo Diário"
                   value="R$ 892"
-                  icon={TrendingUp}
-                  trend="up"
-                  trendValue="+12%"
+                  icon={DollarSign}
+                  colorVariant="alert"
                 />
                 <CostCard 
-                  title="Custo/Chamada"
-                  value="R$ 0.18"
-                  icon={Phone}
-                  trend="down"
-                  trendValue="-3%"
+                  title="Projeção Semanal"
+                  value="R$ 3.120"
+                  icon={DollarSign}
+                  colorVariant="alert"
+                  subtitle="Seg à Hoje"
                 />
                 <CostCard 
-                  title="Projeção Mensal"
-                  value="R$ 24.5k"
-                  icon={BarChart3}
-                  trend="neutral"
+                  title="Custo URA"
+                  value="R$ 156"
+                  icon={DollarSign}
+                  colorVariant="secondary"
                 />
-              </div>
-            </section>
-
-            {/* Métricas Adicionais */}
-            <section>
-              <h2 className="section-title flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Métricas de Desempenho
-              </h2>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="card-base p-4 text-center">
-                  <p className="text-3xl font-bold text-primary font-mono">4.892</p>
-                  <p className="text-xs text-muted-foreground mt-1">Chamadas Hoje</p>
-                </div>
-                <div className="card-base p-4 text-center">
-                  <p className="text-3xl font-bold text-secondary font-mono">1.247</p>
-                  <p className="text-xs text-muted-foreground mt-1">Atendidas</p>
-                </div>
-                <div className="card-base p-4 text-center">
-                  <p className="text-3xl font-bold text-success font-mono">423</p>
-                  <p className="text-xs text-muted-foreground mt-1">Conversões</p>
-                </div>
               </div>
             </section>
 
