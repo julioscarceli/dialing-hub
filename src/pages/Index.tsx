@@ -44,11 +44,11 @@ const Index = () => {
                   <Trash2 className="w-4 h-4 mr-2" />
                   Limpar Uploads
                 </Button>
-                <Button className="flex-1 min-w-[100px] bg-success hover:bg-success/90 text-success-foreground">
+                <Button className="flex-1 min-w-[100px] bg-secondary hover:bg-secondary/90 text-secondary-foreground">
                   <Upload className="w-4 h-4 mr-2" />
                   Importar MG
                 </Button>
-                <Button className="flex-1 min-w-[100px] bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+                <Button className="flex-1 min-w-[100px] bg-secondary hover:bg-secondary/90 text-secondary-foreground">
                   <Upload className="w-4 h-4 mr-2" />
                   Importar SP
                 </Button>
@@ -64,7 +64,7 @@ const Index = () => {
               <div id="realtime-status" className="space-y-4">
                 {/* Status MG */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-success border-l-2 border-success pl-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary border-l-2 border-secondary pl-2">
                     Minas Gerais (MG)
                   </h3>
                   <div className="grid grid-cols-3 gap-3">
@@ -92,7 +92,7 @@ const Index = () => {
                 
                 {/* Status SP */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-destructive border-l-2 border-destructive pl-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary border-l-2 border-secondary pl-2">
                     São Paulo (SP)
                   </h3>
                   <div className="grid grid-cols-3 gap-3">
@@ -129,7 +129,7 @@ const Index = () => {
                 <DollarSign className="w-4 h-4" />
                 Custo Discador - Financeiro
               </h2>
-              <div id="custo-discador-output" className="grid grid-cols-3 gap-4">
+              <div id="custo-discador-output" className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <CostCard 
                   title="Saldo Atual"
                   value="R$ 4.280"
@@ -149,6 +149,12 @@ const Index = () => {
                   icon={DollarSign}
                   colorVariant="alert"
                   subtitle="Seg à Hoje"
+                />
+                <CostCard 
+                  title="Custo URA"
+                  value="R$ 156"
+                  icon={DollarSign}
+                  colorVariant="secondary"
                 />
               </div>
             </section>

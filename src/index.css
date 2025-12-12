@@ -6,62 +6,62 @@
 
 @layer base {
   :root {
-    /* Soma Consignados - Light Mode Palette */
-    --dashboard-base: 210 17% 98%;
-    --dashboard-primary: 211 100% 50%;
-    --dashboard-accent: 211 100% 50%;
+    /* Custom Dashboard Colors - HSL from RGB values */
+    --dashboard-base: 213 14% 27%;
+    --dashboard-primary: 212 88% 46%;
+    --dashboard-accent: 193 64% 55%;
     
-    /* Light Theme */
-    --background: 210 17% 98%;
-    --foreground: 220 15% 20%;
+    /* Dark Theme */
+    --background: 220 20% 10%;
+    --foreground: 210 20% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
+    --card: 213 14% 27%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 210 20% 95%;
 
-    --primary: 211 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 212 88% 46%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 14% 93%;
-    --secondary-foreground: 220 15% 20%;
+    --secondary: 193 64% 55%;
+    --secondary-foreground: 220 20% 10%;
 
-    --muted: 210 14% 96%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 215 15% 60%;
 
-    --accent: 211 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 193 64% 55%;
+    --accent-foreground: 220 20% 10%;
 
-    --destructive: 354 70% 54%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 193 64% 55%;
+    --destructive-foreground: 220 20% 10%;
 
-    --success: 134 61% 41%;
-    --success-foreground: 0 0% 100%;
+    --success: 193 64% 55%;
+    --success-foreground: 220 20% 10%;
 
-    --border: 220 13% 90%;
-    --input: 220 13% 90%;
-    --ring: 211 100% 50%;
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 212 88% 46%;
 
     --radius: 0.75rem;
 
-    /* Status Colors - MG Green, SP Red */
-    --status-online: 134 61% 41%;
-    --status-offline: 354 70% 54%;
-    --status-warning: 38 92% 50%;
+    /* Status Colors - Both use Light Blue (Cyan) */
+    --status-online: 193 64% 55%;
+    --status-offline: 193 64% 50%;
+    --status-warning: 193 64% 45%;
 
-    /* Shadows */
-    --glow-primary: 0 4px 14px hsl(211 100% 50% / 0.15);
-    --glow-accent: 0 4px 14px hsl(211 100% 50% / 0.1);
+    /* Shadows and Glows */
+    --glow-primary: 0 0 20px hsl(212 88% 46% / 0.3);
+    --glow-accent: 0 0 20px hsl(193 64% 55% / 0.3);
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 15% 20%;
-    --sidebar-primary: 211 100% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 14% 96%;
-    --sidebar-accent-foreground: 220 15% 20%;
-    --sidebar-border: 220 13% 90%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-background: 220 18% 12%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 212 88% 46%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 193 64% 55%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 15% 22%;
+    --sidebar-ring: 212 88% 46%;
   }
 }
 
@@ -116,11 +116,11 @@
   }
   
   .upload-zone-mg {
-    @apply border-[hsl(var(--status-online))]/50 hover:border-[hsl(var(--status-online))] hover:bg-[hsl(var(--status-online))]/5;
+    @apply border-secondary/50 hover:border-secondary hover:bg-secondary/5;
   }
   
   .upload-zone-sp {
-    @apply border-[hsl(var(--status-offline))]/50 hover:border-[hsl(var(--status-offline))] hover:bg-[hsl(var(--status-offline))]/5;
+    @apply border-secondary/50 hover:border-secondary hover:bg-secondary/5;
   }
   
   .metric-value {
