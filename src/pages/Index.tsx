@@ -129,7 +129,7 @@ const Index = () => {
                 <DollarSign className="w-4 h-4" />
                 Custo Discador - Financeiro
               </h2>
-              <div id="custo-discador-output" className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div id="custo-discador-output" className="grid grid-cols-3 gap-4">
                 <CostCard 
                   title="Saldo Atual"
                   value="R$ 4.280"
@@ -149,12 +149,6 @@ const Index = () => {
                   icon={DollarSign}
                   colorVariant="alert"
                   subtitle="Seg à Hoje"
-                />
-                <CostCard 
-                  title="Custo URA"
-                  value="R$ 156"
-                  icon={DollarSign}
-                  colorVariant="secondary"
                 />
               </div>
             </section>
