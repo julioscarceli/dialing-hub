@@ -144,7 +144,7 @@ const Index = () => {
                   colorVariant="alert"
                 />
                 <CostCard 
-                  title="Projeção Semanal"
+                  title="Custo Semanal"
                   value="R$ 3.120"
                   icon={DollarSign}
                   colorVariant="alert"
