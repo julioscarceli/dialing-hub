@@ -13,22 +13,28 @@ const Index = () => {
   const { data: finance } = useQuery({
     queryKey: ["financeiro"],
     queryFn: dialingApi.getFinanceiro,
-    refetchInterval: 30000, // Atualiza a cada 30s
+    refetchInterval: 30000, 
   });
 
   // Query para Status MG
   const { data: statusMG } = useQuery({
     queryKey: ["statusMG"],
     queryFn: dialingApi.getStatusMG,
-    refetchInterval: 15000, // MG atualiza a cada 15s
+    refetchInterval: 15000, 
   });
 
   // Query para Status SP
   const { data: statusSP } = useQuery({
     queryKey: ["statusSP"],
     queryFn: dialingApi.getStatusSP,
-    refetchInterval: 15000, // SP atualiza a cada 15s
+    refetchInterval: 15000, 
   });
+
+  // Função auxiliar para limpar o nome da campanha no Front se o Back ainda não estiver atualizado
+  const formatMailingName = (name?: string) => {
+    if (!name) return "Carregando...";
+    return name.replace("MAILING_DISCADOR_", "");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,15 +55,15 @@ const Index = () => {
             </section>
 
             <section className="card-base p-4">
-              <div className="flex flex-wrap gap-3">
-                <Button variant="outline" className="flex-1 min-w-[100px] bg-muted/50 hover:bg-muted">
-                  <Trash2 className="w-4 h-4 mr-2" /> Limpar Uploads
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" className="flex-1 min-w-[120px] bg-muted/50 hover:bg-muted text-xs">
+                  <Trash2 className="w-3 h-3 mr-2" /> Limpar
                 </Button>
-                <Button className="flex-1 min-w-[100px] bg-secondary hover:bg-secondary/90 text-secondary-foreground">
-                  <Upload className="w-4 h-4 mr-2" /> Importar MG
+                <Button className="flex-1 min-w-[120px] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xs font-bold">
+                  <Upload className="w-3 h-3 mr-2" /> Importar MG
                 </Button>
-                <Button className="flex-1 min-w-[100px] bg-secondary hover:bg-secondary/90 text-secondary-foreground">
-                  <Upload className="w-4 h-4 mr-2" /> Importar SP
+                <Button className="flex-1 min-w-[120px] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xs font-bold">
+                  <Upload className="w-3 h-3 mr-2" /> Importar SP
                 </Button>
               </div>
             </section>
@@ -65,25 +71,40 @@ const Index = () => {
             {/* Painel Status Atual Dinâmico */}
             <section>
               <h2 className="section-title flex items-center gap-2">
-                <Activity className="w-4 h-4" /> Status Atual
+                <Activity className="w-4 h-4" /> Status Operacional
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {/* Minas Gerais */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary border-l-2 border-secondary pl-2">Minas Gerais (MG)</h3>
-                  <div className="grid grid-cols-3 gap-3">
-                    <StatusCard title="Mailing" value={statusMG?.nome || "Carregando..."} icon={Target} status={statusMG ? "online" : "neutral"} />
-                    <StatusCard title="Progresso" value={statusMG?.progresso || "0%"} icon={Percent} status={statusMG ? "online" : "neutral"} />
-                    <StatusCard title="Canais" value={statusMG?.saidas || "0"} icon={Radio} status={statusMG ? "online" : "neutral"} subtitle="saídas" />
+                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-secondary border-l-2 border-secondary pl-2 ml-1">
+                    Minas Gerais (MG)
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <StatusCard 
+                        title="Mailing" 
+                        value={formatMailingName(statusMG?.nome)} 
+                        icon={Target} 
+                        status={statusMG?.nome ? "online" : "neutral"} 
+                    />
+                    <StatusCard title="Progresso" value={statusMG?.progresso || "0%"} icon={Percent} status={statusMG?.nome ? "online" : "neutral"} />
+                    <StatusCard title="Canais" value={statusMG?.saidas || "0"} icon={Radio} status={statusMG?.nome ? "online" : "neutral"} subtitle="saídas" />
                   </div>
                 </div>
+
                 {/* São Paulo */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary border-l-2 border-secondary pl-2">São Paulo (SP)</h3>
-                  <div className="grid grid-cols-3 gap-3">
-                    <StatusCard title="Mailing" value={statusSP?.nome || "Carregando..."} icon={Target} status={statusSP ? "online" : "neutral"} />
-                    <StatusCard title="Progresso" value={statusSP?.progresso || "0%"} icon={Percent} status={statusSP ? "online" : "neutral"} />
-                    <StatusCard title="Canais" value={statusSP?.saidas || "0"} icon={Radio} status={statusSP ? "online" : "neutral"} subtitle="saídas" />
+                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-secondary border-l-2 border-secondary pl-2 ml-1">
+                    São Paulo (SP)
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <StatusCard 
+                        title="Mailing" 
+                        value={formatMailingName(statusSP?.nome)} 
+                        icon={Target} 
+                        status={statusSP?.nome ? "online" : "neutral"} 
+                    />
+                    <StatusCard title="Progresso" value={statusSP?.progresso || "0%"} icon={Percent} status={statusSP?.nome ? "online" : "neutral"} />
+                    <StatusCard title="Canais" value={statusSP?.saidas || "0"} icon={Radio} status={statusSP?.nome ? "online" : "neutral"} subtitle="saídas" />
                   </div>
                 </div>
               </div>
@@ -94,23 +115,22 @@ const Index = () => {
           <div className="lg:col-span-7 space-y-6">
             <section>
               <h2 className="section-title flex items-center gap-2">
-                <DollarSign className="w-4 h-4" /> Custo Discador - Financeiro
+                <DollarSign className="w-4 h-4" /> Gestão Financeira
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <CostCard title="Saldo Atual" value={finance?.saldo_atual || "---"} icon={DollarSign} highlight colorVariant="primary" />
                 <CostCard title="Custo Diário" value={finance?.custo_diario || "---"} icon={DollarSign} colorVariant="alert" />
-                <CostCard title="Custo Semanal" value={finance?.custo_semanal || "---"} icon={DollarSign} colorVariant="alert" subtitle="Seg à Hoje" />
+                <CostCard title="Custo Semanal" value={finance?.custo_semanal || "---"} icon={DollarSign} colorVariant="alert" subtitle="Segunda à Hoje" />
               </div>
             </section>
 
             <section>
               <h2 className="section-title flex items-center gap-2">
-                <Clock className="w-4 h-4" /> Histórico de Ações
+                <Clock className="w-4 h-4" /> Logs do Sistema
               </h2>
               <LogTable />
             </section>
           </div>
-
         </div>
       </main>
     </div>
