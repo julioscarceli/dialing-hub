@@ -33,23 +33,27 @@ export const StatusCard = ({ title, value, icon: Icon, status = "neutral", subti
 
   return (
     <div className={cn(
-      "card-base p-4 transition-all duration-300 hover:scale-[1.02]",
+      "card-base p-4 transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between h-full",
       statusColors[status]
     )}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0"> {/* min-w-0 ajuda no truncamento e quebra */}
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
             {title}
           </p>
-          <p className={cn("metric-value mt-1", valueColors[status])}>
+          <p className={cn(
+            "mt-1 font-mono font-bold tracking-tight break-words leading-tight",
+            title === "Mailing" ? "text-sm" : "text-2xl", // Fonte menor para o nome do mailing
+            valueColors[status]
+          )}>
             {value}
           </p>
           {subtitle && (
-            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+            <p className="text-[10px] text-muted-foreground mt-1">{subtitle}</p>
           )}
         </div>
         <div className={cn(
-          "p-2 rounded-lg bg-muted/50",
+          "p-2 rounded-lg bg-muted/50 shrink-0",
           iconColors[status]
         )}>
           <Icon className="w-4 h-4" />
@@ -59,7 +63,7 @@ export const StatusCard = ({ title, value, icon: Icon, status = "neutral", subti
       {status !== "neutral" && (
         <div className="flex items-center gap-2 mt-3">
           <span className={cn("status-indicator", `status-${status === "warning" ? "online" : status}`)} />
-          <span className="text-xs text-muted-foreground capitalize">{status}</span>
+          <span className="text-[10px] text-muted-foreground capitalize font-medium">{status}</span>
         </div>
       )}
     </div>
