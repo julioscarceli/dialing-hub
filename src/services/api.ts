@@ -19,8 +19,10 @@ export interface StatusData {
 export const dialingApi = {
   // Busca Saldo e Custos (Endpoint 2)
   getFinanceiro: async (): Promise<FinanceiroData> => {
+    // fetch: O comando padrão dos navegadores para buscar dados em URLs.
     const response = await fetch(`${API_BASE_URL}/api/custos/`);
     if (!response.ok) throw new Error("Erro ao buscar dados financeiros");
+    // .json(): Pega o texto bruto que veio da API e converte em um objeto que o TypeScript entende.
     return response.json();
   },
 
