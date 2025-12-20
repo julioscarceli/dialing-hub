@@ -54,7 +54,7 @@ const Index = () => {
               </div>
             </section>
 
-            <section className="card-base p-4">
+            <section className="rounded-lg border-2 border-primary/40 bg-card p-4">
               <div className="flex flex-wrap gap-2">
                 <Button variant="outline" className="flex-1 min-w-[120px] bg-muted/50 hover:bg-muted text-xs">
                   <Trash2 className="w-3 h-3 mr-2" /> Limpar

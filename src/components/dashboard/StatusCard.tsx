@@ -11,10 +11,10 @@ interface StatusCardProps {
 
 export const StatusCard = ({ title, value, icon: Icon, status = "neutral", subtitle }: StatusCardProps) => {
   const statusColors = {
-    online: "border-success/30 bg-success/5",
-    offline: "border-destructive/30 bg-destructive/5",
-    warning: "border-yellow-500/30 bg-yellow-500/5",
-    neutral: "border-border/50",
+    online: "border-primary bg-primary/5",
+    offline: "border-primary/70 bg-primary/5",
+    warning: "border-primary/50 bg-primary/5",
+    neutral: "border-primary/40 bg-card",
   };
 
   const iconColors = {
@@ -33,7 +33,7 @@ export const StatusCard = ({ title, value, icon: Icon, status = "neutral", subti
 
   return (
     <div className={cn(
-      "card-base p-4 transition-all duration-300 hover:scale-[1.02] flex flex-col justify-between h-full",
+      "rounded-lg border-2 p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex flex-col justify-between h-full",
       statusColors[status]
     )}>
       <div className="flex items-start justify-between gap-2">
