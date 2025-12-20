@@ -25,10 +25,10 @@ export const StatusCard = ({ title, value, icon: Icon, status = "neutral", subti
   };
 
   const valueColors = {
-    online: "text-success",
-    offline: "text-destructive",
-    warning: "text-yellow-500",
-    neutral: "text-primary",
+    online: "text-foreground",
+    offline: "text-foreground",
+    warning: "text-foreground",
+    neutral: "text-foreground",
   };
 
   return (
