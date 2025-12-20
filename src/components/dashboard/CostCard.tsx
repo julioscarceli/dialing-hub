@@ -48,8 +48,8 @@ export const CostCard = ({
 
   return (
     <div className={cn(
-      "card-base p-5 transition-all duration-300 hover:glow-primary",
-      highlight && "border-primary/50 glow-primary"
+      "rounded-lg border-2 border-primary/40 bg-card p-5 transition-all duration-300 hover:shadow-lg hover:border-primary",
+      highlight && "border-primary shadow-md"
     )}>
       <div className="flex items-center gap-3 mb-3">
         <div className={cn("p-2 rounded-lg", iconBgColors[colorVariant])}>

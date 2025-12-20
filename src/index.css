@@ -90,7 +90,7 @@
   }
   
   .card-base {
-    @apply bg-card rounded-lg border border-border/50;
+    @apply bg-card rounded-lg border-2 border-primary/30 shadow-md;
   }
   
   .status-indicator {
