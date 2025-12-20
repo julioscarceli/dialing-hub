@@ -29,9 +29,9 @@ export const CostCard = ({
   };
 
   const variantColors = {
-    primary: "text-primary",
-    alert: "text-secondary",
-    secondary: "text-muted-foreground",
+    primary: "text-foreground",
+    alert: "text-foreground",
+    secondary: "text-foreground",
   };
 
   const iconBgColors = {

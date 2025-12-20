@@ -1,9 +1,9 @@
-import { DollarSign, Activity, Clock, Database, Trash2, Upload, Target, Percent, Radio } from "lucide-react";
+import { DollarSign, Activity, Database, Trash2, Upload, Target, Percent, Radio, Users } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { UploadZone } from "@/components/dashboard/UploadZone";
 import { StatusCard } from "@/components/dashboard/StatusCard";
 import { CostCard } from "@/components/dashboard/CostCard";
-import { LogTable } from "@/components/dashboard/LogTable";
+import { IdleMonitor } from "@/components/dashboard/IdleMonitor";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { dialingApi } from "@/services/api";
@@ -126,9 +126,9 @@ const Index = () => {
 
             <section>
               <h2 className="section-title flex items-center gap-2">
-                <Clock className="w-4 h-4" /> Logs do Sistema
+                <Users className="w-4 h-4" /> Monitoramento de Ociosidade
               </h2>
-              <LogTable />
+              <IdleMonitor />
             </section>
           </div>
         </div>
