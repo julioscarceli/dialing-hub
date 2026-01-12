@@ -1,4 +1,4 @@
-import { Upload, FileText, Loader2 } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { dialingApi } from "@/services/api";
@@ -13,13 +13,19 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // Função auxiliar para converter arquivo em Base64 (exatamente como o backend espera)
+  // Função para converter arquivo em Base64 e LIMPAR o prefixo
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
+      reader.onload = () => {
+        const result = reader.result as string;
+        // 🚨 IMPORTANTE: Remove o "data:text/csv;base64," para o Python não quebrar
+        const base64Data = result.split(",")[1];
+        resolve(base64Data);
+      };
       reader.onerror = (error) => reject(error);
     });
   };
@@ -28,35 +34,43 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
     const file = files[0];
     if (!file) return;
 
-    // Apenas CSV conforme validado no motor de transformação
     if (!file.name.endsWith('.csv')) {
-      toast.error("Por favor, selecione um arquivo CSV.");
+      toast.error("Formato inválido. Use apenas .csv");
       return;
     }
 
+    // --- INÍCIO LOG DE CLIQUE ---
+    console.log(`[LOG-FRONT] Botão ${region} acionado em: ${new Date().toLocaleTimeString()}`);
+    console.log(`[LOG-FRONT] Arquivo: ${file.name} | Tamanho: ${file.size} bytes`);
+    
     setIsUploading(true);
+    setUploadStatus('idle');
     setUploadedFile(file.name);
 
     try {
       const base64Content = await fileToBase64(file);
+      console.log(`[LOG-FRONT] Conversão Base64 concluída. Enviando para Railway...`);
       
-      // Chama a nova função da dialingApi que adicionamos ao api.ts
       const response = await dialingApi.uploadMailing(
         region,
         base64Content,
         file.name
       );
 
+      // --- LOG DE RESPOSTA DO BACKEND ---
+      console.log(`[LOG-FRONT] Resposta do Servidor:`, response);
+
       if (response.status === "sucesso") {
-        toast.success(`Mailing ${region} importado com sucesso!`);
+        setUploadStatus('success');
+        toast.success(`Mailing ${region} importado! ID Lista: ${response.resposta_discador?.id_lista || 'N/A'}`);
         onFileSelect?.(files);
       } else {
-        throw new Error(response.mensagem || "Erro no processamento");
+        throw new Error(response.mensagem || "Erro desconhecido no servidor");
       }
     } catch (error: any) {
-      console.error("Erro no upload:", error);
-      toast.error(`Falha no upload ${region}: ${error.message}`);
-      setUploadedFile(null); // Reseta em caso de erro
+      setUploadStatus('error');
+      console.error(`[LOG-FRONT] ERRO CRÍTICO NO UPLOAD ${region}:`, error);
+      toast.error(`Falha no upload ${region}. Verifique o console para detalhes.`);
     } finally {
       setIsUploading(false);
     }
@@ -94,7 +108,7 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
         "upload-zone relative group",
         isMG ? "upload-zone-mg" : "upload-zone-sp",
         isDragging && "scale-[1.02] border-secondary bg-secondary/10",
-        isUploading && "opacity-70 pointer-events-none"
+        isUploading && "opacity-70 cursor-wait pointer-events-none"
       )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -111,10 +125,16 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
       <div className="flex flex-col items-center gap-3 text-center">
         <div className={cn(
           "p-3 rounded-full transition-colors",
-          isMG ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+          isMG ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive",
+          uploadStatus === 'success' && "bg-green-500/20 text-green-600",
+          uploadStatus === 'error' && "bg-red-500/20 text-red-600"
         )}>
           {isUploading ? (
             <Loader2 className="w-6 h-6 animate-spin" />
+          ) : uploadStatus === 'success' ? (
+            <CheckCircle2 className="w-6 h-6" />
+          ) : uploadStatus === 'error' ? (
+            <AlertCircle className="w-6 h-6" />
           ) : uploadedFile ? (
             <FileText className="w-6 h-6" />
           ) : (
@@ -130,7 +150,7 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
             Mailing {region}
           </h4>
           {isUploading ? (
-            <p className="text-xs text-muted-foreground mt-1">Processando...</p>
+            <p className="text-xs text-muted-foreground mt-1 animate-pulse">Enviando e Processando...</p>
           ) : uploadedFile ? (
             <p className="text-xs text-muted-foreground mt-1 truncate max-w-[150px]">
               {uploadedFile}
