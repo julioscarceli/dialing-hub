@@ -34,25 +34,29 @@ const Index = () => {
     console.log(`[BOTÃO-IMPORT] 🖱️ Clique detectado para ${region}`);
 
     if (!file) {
-      console.log(`[BOTÃO-IMPORT] ❌ Erro: Nenhum arquivo selecionado para ${region}`);
-      toast.error(`Selecione o arquivo de ${region} na caixa acima primeiro!`);
+      toast.error(`Selecione o arquivo de ${region} primeiro!`);
       return;
     }
 
     setLoading(region);
     try {
-      console.log(`[BOTÃO-IMPORT] 🚀 Iniciando processo para ${file.name}...`);
+      console.log(`[BOTÃO-IMPORT] Convertendo ${file.name}...`);
       const b64 = await fileToBase64(file);
       const res = await dialingApi.uploadMailing(region, b64, file.name);
       
-      console.log(`[BOTÃO-IMPORT] ✅ Resposta Railway:`, res);
+      console.log(`[BOTÃO-IMPORT] ✅ Sucesso Railway:`, res);
       toast.success(`Mailing ${region} importado com sucesso!`);
     } catch (err: any) {
-      console.error(`[BOTÃO-IMPORT] ❌ Erro Crítico:`, err);
-      toast.error(`Erro no upload ${region}. Verifique o console.`);
+      console.error(`[BOTÃO-IMPORT] ❌ Erro:`, err);
+      toast.error(`Erro no upload ${region}`);
     } finally {
       setLoading(null);
     }
+  };
+
+  const formatMailingName = (name?: string) => {
+    if (!name) return "---";
+    return name.replace("MAILING_DISCADOR_", "");
   };
 
   return (
@@ -73,7 +77,7 @@ const Index = () => {
 
             <section className="rounded-lg border-2 border-primary/40 bg-card p-4">
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" className="flex-1 min-w-[120px] bg-muted/50 text-xs" onClick={() => { setFileMG(null); setFileSP(null); }}>
+                <Button variant="outline" className="flex-1 min-w-[120px] bg-muted/50 text-xs" onClick={() => window.location.reload()}>
                   <Trash2 className="w-3 h-3 mr-2" /> Limpar
                 </Button>
                 <Button 
@@ -81,7 +85,7 @@ const Index = () => {
                   onClick={() => handleImport('MG')}
                   disabled={loading === 'MG'}
                 >
-                  {loading === 'MG' ? <Loader2 className="animate-spin mr-2 w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
+                  {loading === 'MG' ? <Loader2 className="animate-spin w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
                   Importar MG
                 </Button>
                 <Button 
@@ -89,32 +93,29 @@ const Index = () => {
                   onClick={() => handleImport('SP')}
                   disabled={loading === 'SP'}
                 >
-                  {loading === 'SP' ? <Loader2 className="animate-spin mr-2 w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
+                  {loading === 'SP' ? <Loader2 className="animate-spin w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
                   Importar SP
                 </Button>
               </div>
             </section>
 
-            {/* Status Operacional (Mantenha o resto do código original aqui...) */}
             <section>
               <h2 className="section-title flex items-center gap-2">
                 <Activity className="w-4 h-4" /> Status Operacional
               </h2>
               <div className="space-y-6">
-                {/* MG */}
                 <div className="space-y-3">
                   <h3 className="text-[10px] font-bold uppercase tracking-widest text-secondary border-l-2 border-secondary pl-2 ml-1">Minas Gerais (MG)</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <StatusCard title="Mailing" value={statusMG?.nome?.replace("MAILING_DISCADOR_", "") || "---"} icon={Target} status={statusMG?.nome ? "online" : "neutral"} />
+                    <StatusCard title="Mailing" value={formatMailingName(statusMG?.nome)} icon={Target} status={statusMG?.nome ? "online" : "neutral"} />
                     <StatusCard title="Progresso" value={statusMG?.progresso || "0%"} icon={Percent} status={statusMG?.nome ? "online" : "neutral"} />
                     <StatusCard title="Canais" value={statusMG?.saidas || "0"} icon={Radio} status={statusMG?.nome ? "online" : "neutral"} subtitle="saídas" />
                   </div>
                 </div>
-                {/* SP */}
                 <div className="space-y-3">
                   <h3 className="text-[10px] font-bold uppercase tracking-widest text-secondary border-l-2 border-secondary pl-2 ml-1">São Paulo (SP)</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <StatusCard title="Mailing" value={statusSP?.nome?.replace("MAILING_DISCADOR_", "") || "---"} icon={Target} status={statusSP?.nome ? "online" : "neutral"} />
+                    <StatusCard title="Mailing" value={formatMailingName(statusSP?.nome)} icon={Target} status={statusSP?.nome ? "online" : "neutral"} />
                     <StatusCard title="Progresso" value={statusSP?.progresso || "0%"} icon={Percent} status={statusSP?.nome ? "online" : "neutral"} />
                     <StatusCard title="Canais" value={statusSP?.saidas || "0"} icon={Radio} status={statusSP?.nome ? "online" : "neutral"} subtitle="saídas" />
                   </div>
@@ -123,7 +124,6 @@ const Index = () => {
             </section>
           </div>
 
-          {/* Coluna Financeira (Mantenha igual ao seu código original) */}
           <div className="lg:col-span-7 space-y-6">
             <section>
               <h2 className="section-title flex items-center gap-2"><DollarSign className="w-4 h-4" /> Gestão Financeira</h2>
