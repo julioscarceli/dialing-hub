@@ -35,7 +35,7 @@ export const dialingApi = {
   },
 
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
-    console.log(`[API-LOG] 📡 Enviando para Railway: ${server}`);
+    console.log(`[API-LOG] 📡 Enviando para ${server}...`);
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
 
     const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
