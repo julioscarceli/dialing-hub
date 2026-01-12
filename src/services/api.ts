@@ -38,9 +38,9 @@ export const dialingApi = {
     return response.json();
   },
 
-  // NOVO: Envio de Mailing (Endpoint de Upload)
+  // Envio de Mailing (Endpoint de Upload)
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
-    // Remove o cabeçalho data:text/csv;base64, caso o front envie com ele
+    // Garante que o Base64 enviado seja apenas o conteúdo (sem o prefixo data:text/csv;base64,)
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
 
     const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
@@ -56,7 +56,7 @@ export const dialingApi = {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({ detail: "Erro desconhecido no servidor" }));
       throw new Error(errorData.detail || "Erro ao realizar upload do mailing");
     }
     return response.json();
