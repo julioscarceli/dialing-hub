@@ -1,4 +1,5 @@
 // src/components/dashboard/UploadZone.tsx
+
 import { Upload, FileText } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -15,8 +16,8 @@ export const UploadZone = ({ region, onFileChange }: UploadZoneProps) => {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setFileName(file ? file.name : null);
-    onFileChange(file); // Passa o arquivo para o Index.tsx
-    console.log(`[UPLOAD-ZONE] Arquivo selecionado para ${region}:`, file?.name);
+    onFileChange(file); // Envia o arquivo selecionado para o componente Index
+    console.log(`[UPLOAD-ZONE] 📂 Arquivo selecionado (${region}):`, file?.name);
   };
 
   return (
@@ -34,9 +35,9 @@ export const UploadZone = ({ region, onFileChange }: UploadZoneProps) => {
         {fileName ? <FileText className="w-6 h-6" /> : <Upload className="w-6 h-6" />}
       </div>
       <div className="text-center">
-        <h4 className="text-xs font-bold uppercase">Mailing {region}</h4>
+        <h4 className="text-xs font-bold uppercase">{region}</h4>
         <p className="text-[10px] text-muted-foreground truncate max-w-[120px]">
-          {fileName || "Clique para selecionar"}
+          {fileName || "Clique para selecionar CSV"}
         </p>
       </div>
     </div>
