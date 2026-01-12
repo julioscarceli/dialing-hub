@@ -35,12 +35,16 @@ export const dialingApi = {
   },
 
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
-    console.log(`[API-LOG] 📡 Enviando para ${server}...`);
+    console.log(`[API-LOG] 📡 Enviando para Railway: ${server} | Arquivo: ${fileName}`);
+    
+    // Remove o prefixo data:text/csv;base64,
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
 
     const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         file_content_base64: cleanBase64,
         mailling_name: fileName,
