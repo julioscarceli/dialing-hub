@@ -1,3 +1,5 @@
+// src/components/dashboard/UploadZone.tsx
+
 import { Upload, FileText, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
@@ -22,7 +24,7 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
       reader.readAsDataURL(file);
       reader.onload = () => {
         const result = reader.result as string;
-        // 🚨 IMPORTANTE: Remove o "data:text/csv;base64," para o Python não quebrar
+        // Remove o "data:text/csv;base64," para o Python não quebrar
         const base64Data = result.split(",")[1];
         resolve(base64Data);
       };
@@ -39,7 +41,7 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
       return;
     }
 
-    // --- INÍCIO LOG DE CLIQUE ---
+    // Logs para acompanhamento no Console (F12)
     console.log(`[LOG-FRONT] Botão ${region} acionado em: ${new Date().toLocaleTimeString()}`);
     console.log(`[LOG-FRONT] Arquivo: ${file.name} | Tamanho: ${file.size} bytes`);
     
@@ -57,7 +59,6 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
         file.name
       );
 
-      // --- LOG DE RESPOSTA DO BACKEND ---
       console.log(`[LOG-FRONT] Resposta do Servidor:`, response);
 
       if (response.status === "sucesso") {
@@ -65,12 +66,12 @@ export const UploadZone = ({ region, onFileSelect }: UploadZoneProps) => {
         toast.success(`Mailing ${region} importado! ID Lista: ${response.resposta_discador?.id_lista || 'N/A'}`);
         onFileSelect?.(files);
       } else {
-        throw new Error(response.mensagem || "Erro desconhecido no servidor");
+        throw new Error(response.mensagem || "Erro inesperado no servidor");
       }
     } catch (error: any) {
       setUploadStatus('error');
-      console.error(`[LOG-FRONT] ERRO CRÍTICO NO UPLOAD ${region}:`, error);
-      toast.error(`Falha no upload ${region}. Verifique o console para detalhes.`);
+      console.error(`[LOG-FRONT] ERRO NO UPLOAD ${region}:`, error);
+      toast.error(`Falha no upload ${region}. Veja o console F12 para detalhes.`);
     } finally {
       setIsUploading(false);
     }
