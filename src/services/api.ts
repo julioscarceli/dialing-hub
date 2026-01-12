@@ -1,5 +1,4 @@
 // src/services/api.ts
-
 const API_BASE_URL = "https://api-discador-production.up.railway.app";
 
 export interface FinanceiroData {
@@ -17,50 +16,47 @@ export interface StatusData {
 }
 
 export const dialingApi = {
-  // Busca Saldo e Custos (Endpoint 2)
   getFinanceiro: async (): Promise<FinanceiroData> => {
     const response = await fetch(`${API_BASE_URL}/api/custos/`);
     if (!response.ok) throw new Error("Erro ao buscar dados financeiros");
     return response.json();
   },
 
-  // Busca Status MG (Endpoint 1)
   getStatusMG: async (): Promise<StatusData> => {
     const response = await fetch(`${API_BASE_URL}/api/status/MG`);
     if (!response.ok) throw new Error("Erro ao buscar status MG");
     return response.json();
   },
 
-  // Busca Status SP (Endpoint 1)
   getStatusSP: async (): Promise<StatusData> => {
     const response = await fetch(`${API_BASE_URL}/api/status/SP`);
     if (!response.ok) throw new Error("Erro ao buscar status SP");
     return response.json();
   },
 
-  // Envio de Mailing (Endpoint de Upload)
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
-    // Garante que o Base64 enviado seja apenas o conteúdo (sem o prefixo data:text/csv;base64,)
+    console.log(`[API-LOG] 📡 A enviar para Railway: ${server} | Ficheiro: ${fileName}`);
+    
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
 
-    console.log(`[API] 📡 Enviando para: ${server} | Arquivo: ${fileName}`);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          file_content_base64: cleanBase64,
+          mailling_name: fileName,
+          login_crm: 'DASHBOARD_LOVABLE'
+        }),
+      });
 
-    const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        file_content_base64: cleanBase64,
-        mailling_name: fileName,
-        login_crm: 'DASHBOARD_LOVABLE'
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ detail: "Erro desconhecido no servidor" }));
-      throw new Error(errorData.detail || "Erro ao realizar upload do mailing");
+      console.log(`[API-LOG] 📥 Resposta HTTP: ${response.status}`);
+      const result = await response.json();
+      console.log(`[API-LOG] ✅ Resultado:`, result);
+      return result;
+    } catch (error) {
+      console.error(`[API-LOG] ❌ Erro na chamada Fetch:`, error);
+      throw error;
     }
-    return response.json();
   }
 };
