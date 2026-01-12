@@ -15,7 +15,7 @@ export const UploadZone = ({ region, onFileChange }: UploadZoneProps) => {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setFileName(file ? file.name : null);
-    onFileChange(file);
+    onFileChange(file); // Envia o arquivo para o Index.tsx
     console.log(`[UPLOAD-ZONE] Arquivo selecionado para ${region}:`, file?.name);
   };
 
