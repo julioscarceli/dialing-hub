@@ -1,5 +1,4 @@
 // src/services/api.ts
-
 const API_BASE_URL = "https://api-discador-production.up.railway.app";
 
 export interface FinanceiroData {
@@ -36,15 +35,12 @@ export const dialingApi = {
   },
 
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
+    console.log(`[API-LOG] 📡 Enviando para Railway: ${server}`);
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
-    
-    console.log(`[API-LOG] 📡 Enviando para: ${server} | Arquivo: ${fileName}`);
 
     const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         file_content_base64: cleanBase64,
         mailling_name: fileName,
