@@ -1,4 +1,5 @@
 // src/pages/Index.tsx
+
 import { DollarSign, Activity, Database, Trash2, Upload, Target, Percent, Radio, Users, Loader2 } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { UploadZone } from "@/components/dashboard/UploadZone";
@@ -12,9 +13,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const Index = () => {
+  // Estados para armazenar os arquivos selecionados
   const [fileMG, setFileMG] = useState<File | null>(null);
   const [fileSP, setFileSP] = useState<File | null>(null);
-  const [loading, setLoading] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState<string | null>(null);
 
   const { data: finance } = useQuery({ queryKey: ["financeiro"], queryFn: dialingApi.getFinanceiro, refetchInterval: 30000 });
   const { data: statusMG } = useQuery({ queryKey: ["statusMG"], queryFn: dialingApi.getStatusMG, refetchInterval: 15000 });
@@ -29,28 +31,29 @@ const Index = () => {
     });
   };
 
-  const handleImport = async (region: 'MG' | 'SP') => {
+  const handleImportClick = async (region: 'MG' | 'SP') => {
     const file = region === 'MG' ? fileMG : fileSP;
-    console.log(`[BOTÃO-IMPORT] 🖱️ Clique detectado para ${region}`);
+    console.log(`[INDEX-LOG] 🖱️ Botão Importar ${region} clicado.`);
 
     if (!file) {
-      toast.error(`Selecione o arquivo de ${region} primeiro!`);
+      console.log(`[INDEX-LOG] ❌ Erro: Nenhum arquivo selecionado para ${region}`);
+      toast.error(`Selecione o arquivo CSV de ${region} primeiro!`);
       return;
     }
 
-    setLoading(region);
+    setIsImporting(region);
     try {
-      console.log(`[BOTÃO-IMPORT] Convertendo ${file.name}...`);
+      console.log(`[INDEX-LOG] 🚀 Iniciando processamento de ${file.name}...`);
       const b64 = await fileToBase64(file);
       const res = await dialingApi.uploadMailing(region, b64, file.name);
       
-      console.log(`[BOTÃO-IMPORT] ✅ Sucesso Railway:`, res);
-      toast.success(`Mailing ${region} importado com sucesso!`);
+      console.log(`[INDEX-LOG] ✅ Sucesso!`, res);
+      toast.success(`Mailing ${region} enviado com sucesso!`);
     } catch (err: any) {
-      console.error(`[BOTÃO-IMPORT] ❌ Erro:`, err);
-      toast.error(`Erro no upload ${region}`);
+      console.error(`[INDEX-LOG] ❌ Falha:`, err);
+      toast.error(`Erro no upload ${region}: ${err.message}`);
     } finally {
-      setLoading(null);
+      setIsImporting(null);
     }
   };
 
@@ -62,8 +65,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto px-6 py-8">
+      <main className="container px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
           <div className="lg:col-span-5 space-y-6">
             <section>
               <h2 className="section-title flex items-center gap-2">
@@ -77,23 +81,23 @@ const Index = () => {
 
             <section className="rounded-lg border-2 border-primary/40 bg-card p-4">
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" className="flex-1 min-w-[120px] bg-muted/50 text-xs" onClick={() => window.location.reload()}>
+                <Button variant="outline" className="flex-1 bg-muted/50 text-xs" onClick={() => window.location.reload()}>
                   <Trash2 className="w-3 h-3 mr-2" /> Limpar
                 </Button>
                 <Button 
-                  className="flex-1 min-w-[120px] bg-secondary text-secondary-foreground text-xs font-bold" 
-                  onClick={() => handleImport('MG')}
-                  disabled={loading === 'MG'}
+                  className="flex-1 bg-secondary text-secondary-foreground text-xs font-bold" 
+                  onClick={() => handleImportClick('MG')}
+                  disabled={isImporting === 'MG'}
                 >
-                  {loading === 'MG' ? <Loader2 className="animate-spin w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
+                  {isImporting === 'MG' ? <Loader2 className="animate-spin mr-2 w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
                   Importar MG
                 </Button>
                 <Button 
-                  className="flex-1 min-w-[120px] bg-secondary text-secondary-foreground text-xs font-bold" 
-                  onClick={() => handleImport('SP')}
-                  disabled={loading === 'SP'}
+                  className="flex-1 bg-secondary text-secondary-foreground text-xs font-bold" 
+                  onClick={() => handleImportClick('SP')}
+                  disabled={isImporting === 'SP'}
                 >
-                  {loading === 'SP' ? <Loader2 className="animate-spin w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
+                  {isImporting === 'SP' ? <Loader2 className="animate-spin mr-2 w-3 h-3" /> : <Upload className="w-3 h-3 mr-2" />}
                   Importar SP
                 </Button>
               </div>
