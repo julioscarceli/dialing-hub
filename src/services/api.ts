@@ -43,6 +43,8 @@ export const dialingApi = {
     // Garante que o Base64 enviado seja apenas o conteúdo (sem o prefixo data:text/csv;base64,)
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
 
+    console.log(`[API] 📡 Enviando para: ${server} | Arquivo: ${fileName}`);
+
     const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
       method: 'POST',
       headers: {
