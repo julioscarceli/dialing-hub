@@ -19,10 +19,8 @@ export interface StatusData {
 export const dialingApi = {
   // Busca Saldo e Custos (Endpoint 2)
   getFinanceiro: async (): Promise<FinanceiroData> => {
-    // fetch: O comando padrão dos navegadores para buscar dados em URLs.
     const response = await fetch(`${API_BASE_URL}/api/custos/`);
     if (!response.ok) throw new Error("Erro ao buscar dados financeiros");
-    // .json(): Pega o texto bruto que veio da API e converte em um objeto que o TypeScript entende.
     return response.json();
   },
 
@@ -37,6 +35,30 @@ export const dialingApi = {
   getStatusSP: async (): Promise<StatusData> => {
     const response = await fetch(`${API_BASE_URL}/api/status/SP`);
     if (!response.ok) throw new Error("Erro ao buscar status SP");
+    return response.json();
+  },
+
+  // NOVO: Envio de Mailing (Endpoint de Upload)
+  uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
+    // Remove o cabeçalho data:text/csv;base64, caso o front envie com ele
+    const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
+
+    const response = await fetch(`${API_BASE_URL}/api/upload/${server}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        file_content_base64: cleanBase64,
+        mailling_name: fileName,
+        login_crm: 'DASHBOARD_LOVABLE'
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Erro ao realizar upload do mailing");
+    }
     return response.json();
   }
 };
