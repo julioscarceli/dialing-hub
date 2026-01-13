@@ -17,24 +17,28 @@ export interface StatusData {
 }
 
 export const dialingApi = {
+  // Busca Saldo e Custos (Endpoint 2)
   getFinanceiro: async (): Promise<FinanceiroData> => {
     const response = await fetch(`${API_BASE_URL}/api/custos/`);
     if (!response.ok) throw new Error("Erro ao buscar dados financeiros");
     return response.json();
   },
 
+  // Busca Status MG (Endpoint 1)
   getStatusMG: async (): Promise<StatusData> => {
     const response = await fetch(`${API_BASE_URL}/api/status/MG`);
     if (!response.ok) throw new Error("Erro ao buscar status MG");
     return response.json();
   },
 
+  // Busca Status SP (Endpoint 1)
   getStatusSP: async (): Promise<StatusData> => {
     const response = await fetch(`${API_BASE_URL}/api/status/SP`);
     if (!response.ok) throw new Error("Erro ao buscar status SP");
     return response.json();
   },
 
+  // Envio de Mailing (Endpoint de Upload)
   uploadMailing: async (server: 'SP' | 'MG', fileBase64: string, fileName: string): Promise<any> => {
     console.log(`[API-LOG] 📡 Iniciando fetch para ${server}...`);
     const cleanBase64 = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
