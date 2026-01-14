@@ -1,6 +1,8 @@
 // src/services/api.ts
 
 const API_BASE_URL = "https://api-discador-production.up.railway.app";
+// URL pública do seu novo worker de monitoramento confirmada pelo print
+const LOG_WORKER_URL = "https://api-discador-production-36c2.up.railway.app"; 
 
 export interface FinanceiroData {
   saldo_atual: string;
@@ -63,5 +65,28 @@ export const dialingApi = {
     const result = await response.json();
     console.log(`[API-LOG] ✅ Resposta da API:`, result);
     return result;
+  },
+
+  // NOVA FUNÇÃO: Enviar logs para o import-monitor no Railway
+  sendImportLog: async (logData: {
+    region: string;
+    action: string;
+    status: 'sucesso' | 'erro' | 'processando';
+    message: string;
+    file_name?: string;
+    campaign_id?: string;
+  }) => {
+    try {
+      await fetch(`${LOG_WORKER_URL}/api/logs/import`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: new Date().toLocaleTimeString('pt-BR'),
+          ...logData
+        }),
+      });
+    } catch (err) {
+      console.error("Falha ao reportar log para o Railway", err);
+    }
   }
 };
