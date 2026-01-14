@@ -60,6 +60,16 @@ const Index = () => {
     }
 
     setIsUploading(region);
+    
+    // 1. LOG: Início do processo enviado ao Railway
+    await dialingApi.sendImportLog({
+      region,
+      action: "Upload Iniciado",
+      status: "processando",
+      message: `Iniciando processamento do arquivo via Dashboard`,
+      file_name: file.name
+    });
+
     const progressInterval = simulateProgress();
 
     try {
@@ -70,8 +80,20 @@ const Index = () => {
       clearInterval(progressInterval);
       setUploadProgress(100);
       
-      console.log(`[BOTÃO-IMPORT] ✅ Resposta Railway:`, res);
-      toast.success(`Mailing ${region} importado com sucesso!`);
+      if (res.status === "sucesso") {
+        // 2. LOG: Sucesso reportado ao import-monitor
+        await dialingApi.sendImportLog({
+          region,
+          action: "Importação Concluída",
+          status: "sucesso",
+          message: "Arquivo aceito e processado pelo gateway",
+          file_name: file.name,
+          campaign_id: res.campanha_id
+        });
+
+        console.log(`[BOTÃO-IMPORT] ✅ Resposta Railway:`, res);
+        toast.success(`Mailing ${region} importado com sucesso!`);
+      }
       
       setTimeout(() => {
         setIsUploading(null);
@@ -81,6 +103,16 @@ const Index = () => {
       clearInterval(progressInterval);
       setIsUploading(null);
       setUploadProgress(0);
+      
+      // 3. LOG: Registro de falha no monitor
+      await dialingApi.sendImportLog({
+        region,
+        action: "Falha no Upload",
+        status: "erro",
+        message: err.message || "Erro desconhecido na comunicação com a API",
+        file_name: file.name
+      });
+
       console.error(`[BOTÃO-IMPORT] ❌ Erro:`, err);
       toast.error(`Erro no upload ${region}`);
     }
